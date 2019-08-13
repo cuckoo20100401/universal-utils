@@ -1,8 +1,5 @@
 package org.cuckoo.universal.utils;
 
-/**
- * IP操作工具类
- */
 public class IPUtils {
 
 	/**

@@ -12,21 +12,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-/**
- * 文件操作工具类
- */
 public class FileUtils {
 	
 	/**
 	 * 读取文件内容
-	 * @param filepath 文件绝对路径
+	 * @param filePath 文件绝对路径
 	 * @param charsetName 文件字符集
 	 * @return 已去掉前后空格的文件所有内容
 	 * @throws IOException
 	 */
-	public static String read(String filepath, String charsetName) throws IOException {
+	public static String read(String filePath, String charsetName) throws IOException {
 		
-		File file = new File(filepath);
+		File file = new File(filePath);
 		if(!file.exists()) throw new FileNotFoundException();
 		
 		StringBuffer fileContent = new StringBuffer();
@@ -43,19 +40,19 @@ public class FileUtils {
 		} finally {
 			if(br != null) br.close();
 		}
-		return fileContent.toString().trim();
+		return fileContent.toString();
 	}
 	
 	/**
 	 * 读取文件内容
-	 * @param filepath 文件绝对路径
+	 * @param filePath 文件绝对路径
 	 * @param charsetName 文件字符集
 	 * @param callback 回调接口
 	 * @throws IOException
 	 */
-	public static void read(String filepath, String charsetName, ReadCallback callback) throws IOException {
+	public static void read(String filePath, String charsetName, ReadCallback callback) throws IOException {
 		
-		File file = new File(filepath);
+		File file = new File(filePath);
 		if(!file.exists()) throw new FileNotFoundException();
 		
 		BufferedReader br = null;
@@ -64,7 +61,7 @@ public class FileUtils {
 			InputStreamReader isr = new InputStreamReader(fis, charsetName);
 			br = new BufferedReader(isr);
 			String lineStr = null;
-			while((lineStr = br.readLine()) != null){
+			while ((lineStr = br.readLine()) != null) {
 				callback.readLine(lineStr);
 			}
 		} finally {
@@ -74,15 +71,15 @@ public class FileUtils {
 	
 	/**
 	 * 写内容到文件
-	 * @param filepath 文件绝对路径
+	 * @param filePath 文件绝对路径
 	 * @param charsetName 文件字符集
 	 * @param isAppend 是否追加
 	 * @param content 内容
 	 * @throws IOException
 	 */
-	public static void write(String filepath, String charsetName, boolean isAppend, String content) throws IOException {
+	public static void write(String filePath, String charsetName, boolean isAppend, String content) throws IOException {
 		
-		File file = new File(filepath);
+		File file = new File(filePath);
 		if(!file.exists()) throw new FileNotFoundException();
 		
 		BufferedWriter bw = null;
@@ -98,16 +95,17 @@ public class FileUtils {
 
 	/**
 	 * 复制文件
-	 * @param srcFilepath 源文件路径
-	 * @param targetFilepath 目标文件路径
+	 * @param srcFilePath
+	 * @param targetFilePath
+	 * @throws IOException
 	 */
-	public static void copy(String srcFilepath, String targetFilepath) throws IOException {
+	public static void copy(String srcFilePath, String targetFilePath) throws IOException {
 		
-		File srcFile = new File(srcFilepath);
-		File targetFile = new File(targetFilepath);
+		File srcFile = new File(srcFilePath);
+		File targetFile = new File(targetFilePath);
 		
 		if(!srcFile.exists()) throw new FileNotFoundException("源文件不存在");
-		if(!new File(targetFile.getParent()).exists()) throw new IOException("目标文件保存目录不存在");
+		if(!targetFile.getParentFile().exists()) throw new IOException("目标文件保存目录不存在");
 		
 		FileInputStream fis=new FileInputStream(srcFile);
 		FileOutputStream fos=new FileOutputStream(targetFile);
@@ -123,47 +121,20 @@ public class FileUtils {
 	
 	/**
 	 * 剪切文件
-	 * @param srcFilepath 源文件路径
-	 * @param targetFilepath 目标文件路径
-	 * @throws IOException 
+	 * @param srcFilePath
+	 * @param targetFilePath
+	 * @return
+	 * @throws IOException
 	 */
-	public static boolean cut(String srcFilepath, String targetFilepath) throws IOException {
+	public static boolean cut(String srcFilePath, String targetFilePath) throws IOException {
 		
-		File srcFile = new File(srcFilepath);
-		File targetFile = new File(targetFilepath);
+		File srcFile = new File(srcFilePath);
+		File targetFile = new File(targetFilePath);
 		
 		if(!srcFile.exists()) throw new FileNotFoundException("源文件不存在");
-		if(!new File(targetFile.getParent()).exists()) throw new IOException("目标文件保存目录不存在");
+		if(!targetFile.getParentFile().exists()) throw new IOException("目标文件保存目录不存在");
 		
 		return srcFile.renameTo(targetFile);
-	}
-	
-	/**
-	 * 删除文件
-	 * @param filepath				要删除文件的路径
-	 * @param deleteOnExit			是否在程序退出时删除文件
-	 */
-	public static void delete(String filepath, boolean deleteOnExit) {
-		File file=new File(filepath);
-		if(file.exists()){
-			if(deleteOnExit){
-				file.deleteOnExit();
-			}else{
-				file.delete();
-			}
-		}
-	}
-	
-	/**
-	 * 获取文件的后缀名
-	 * @param file 文件名或文件路径
-	 * @return 带“.”的后缀名，如“.mp3”、“.py”
-	 */
-	public static String getSuffix(String file) {
-		if(file == null || file.trim().length() == 0 || file.indexOf(".") == -1){
-			return null;
-		}
-		return file.substring(file.lastIndexOf("."));
 	}
 	
 	/**

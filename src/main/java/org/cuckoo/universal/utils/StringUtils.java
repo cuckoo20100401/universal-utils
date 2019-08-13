@@ -5,30 +5,18 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
 
-/**
- * 字符串工具类
- */
 public class StringUtils {
-	
-	/**
-	 * 生成UUID
-	 * @return
-	 */
-	public static String uuid() {
-		return UUID.randomUUID().toString().replaceAll("-", "");
-	}
 	
 	/**
 	 * 生成唯一的数字字符串
 	 * @return
 	 */
-	public static String uniqueNumStr(){
-		StringBuffer sb = new StringBuffer();
+	public static String uniqueNumString(){
+		StringBuilder sb = new StringBuilder();
 		sb.append(System.currentTimeMillis());
 		int r = 0;
-		for(int i=0;i<6;i++){
+		for(int i = 0; i < 6; i++){
 			r = (int) (Math.random() * (10));
 			sb.append(r);
 		}
@@ -41,10 +29,7 @@ public class StringUtils {
 	 * @return
 	 */
 	public static boolean isNullOrEmpty(String str){
-		if(str == null || str.trim().length() == 0){
-			return true;
-		}
-		return false;
+		return str == null || str.trim().length() == 0 ? true : false;
 	}
 	
 	/**

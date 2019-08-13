@@ -13,9 +13,6 @@ import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
-/**
- * 图片工具类
- */
 public class ImageUtils {
 	
 	/**
@@ -27,13 +24,12 @@ public class ImageUtils {
 	 * @param width 截取宽度
 	 * @param height 截取高度
 	 * @throws IOException
-	 * @return 目标图片路径
 	 */
-	public static String cut(String srcPath, String targetPath, int x, int y, int width, int height) throws IOException {
+	public static void cut(String srcPath, String targetPath, int x, int y, int width, int height) throws IOException {
 		FileInputStream is = null;
 		ImageInputStream iis = null;
 		try {
-			if(!new File(srcPath).exists()) throw new IOException("srcPath不存在");
+			if (!new File(srcPath).exists()) throw new IOException("文件["+srcPath+"]不存在");
 			is = new FileInputStream(srcPath);
 			String extFileName = srcPath.substring(srcPath.lastIndexOf(".") + 1);
 			Iterator<ImageReader> it = ImageIO.getImageReadersByFormatName(extFileName);
@@ -50,7 +46,6 @@ public class ImageUtils {
 			if (is != null) is.close();
 			if (iis != null) iis.close();
 		}
-		return targetPath;
 	}
 	
 	/**
@@ -62,12 +57,11 @@ public class ImageUtils {
 	 * @param width 截取宽度
 	 * @param height 截取高度
 	 * @throws IOException
-	 * @return 目标图片路径
 	 */
-	public static String cut(InputStream is, String targetPath, int x, int y, int width, int height) throws IOException {
+	public static void cut(InputStream is, String targetPath, int x, int y, int width, int height) throws IOException {
 		ImageInputStream iis = null;
 		try {
-			if(is == null) throw new IOException("源图片输入流不能为空");
+			if (is == null) throw new IOException("源图片输入流不能为空");
 			String extFileName = targetPath.substring(targetPath.lastIndexOf(".") + 1);
 			Iterator<ImageReader> it = ImageIO.getImageReadersByFormatName(extFileName);
 			ImageReader reader = it.next();
@@ -84,6 +78,5 @@ public class ImageUtils {
 			if (is != null) is.close();
 			if (iis != null) iis.close();
 		}
-		return targetPath;
 	}
 }
