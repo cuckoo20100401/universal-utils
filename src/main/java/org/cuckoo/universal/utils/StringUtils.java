@@ -1,12 +1,96 @@
 package org.cuckoo.universal.utils;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 public class StringUtils {
+	
+	private static final String aes_secret = "cuckoo20100401";
+	
+	public static String encryptByAES(String str) {
+		return encryptByAES(str, aes_secret);
+	}
+	
+	public static String decryptByAES(String ciphertext) {
+		return decryptByAES(ciphertext, aes_secret);
+	}
+	
+	public static String encryptByAES(String str, String secret) {
+		try {
+			// create key
+			byte[] secretKeyBytes = secret.getBytes(StandardCharsets.UTF_8);
+			byte[] secretKeyByteExts = new byte[32];
+			for (int i = 0; i < secretKeyByteExts.length; i++) {
+				if (i < secretKeyBytes.length) {
+					secretKeyByteExts[i] = secretKeyBytes[i];
+				} else {
+					secretKeyByteExts[i] = ' ';
+				}
+			}
+			Key key = new SecretKeySpec(secretKeyByteExts, "AES");
+			// encrypt
+			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+			cipher.init(Cipher.ENCRYPT_MODE, key);
+			byte[] ciphertextBytes = cipher.doFinal(str.getBytes(StandardCharsets.UTF_8));
+			return Base64.getEncoder().encodeToString(ciphertextBytes);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static String decryptByAES(String ciphertext, String secret) {
+		try {
+			// create key
+			byte[] secretKeyBytes = secret.getBytes(StandardCharsets.UTF_8);
+			byte[] secretKeyByteExts = new byte[32];
+			for (int i = 0; i < secretKeyByteExts.length; i++) {
+				if (i < secretKeyBytes.length) {
+					secretKeyByteExts[i] = secretKeyBytes[i];
+				} else {
+					secretKeyByteExts[i] = ' ';
+				}
+			}
+			Key key = new SecretKeySpec(secretKeyByteExts, "AES");
+			// decode
+			byte[] ciphertextBytes = Base64.getDecoder().decode(ciphertext.getBytes(StandardCharsets.UTF_8));
+			// decrypt
+			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+			cipher.init(Cipher.DECRYPT_MODE, key);
+			byte[] plaintextBytes = cipher.doFinal(ciphertextBytes);
+			return new String(plaintextBytes, StandardCharsets.UTF_8);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			e.printStackTrace();
+			System.err.println("异常信息：指定的密钥不正确，解密失败");
+		}
+		return null;
+	}
 	
 	/**
 	 * 生成唯一的数字字符串
@@ -53,38 +137,6 @@ public class StringUtils {
 			e.printStackTrace();
 		}
         return sb.toString();
-	}
-	
-	/**
-	 * 编码为UTF8
-	 * @param str
-	 * @return
-	 */
-	public static String encodeByUTF8(String str){
-		String result = null;
-		if(str == null) return result;
-		try {
-			result = URLEncoder.encode(str, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-	
-	/**
-	 * 用UTF8解码
-	 * @param str
-	 * @return
-	 */
-	public static String decodeByUTF8(String str){
-		String result = null;
-		if(str == null) return result;
-		try {
-			result = URLDecoder.decode(str, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return result;
 	}
 	
 }
