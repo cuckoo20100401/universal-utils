@@ -1,0 +1,120 @@
+package org.cuckoo.universal.utils;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class ResultEntity {
+	
+	private Boolean success;
+	private String message;
+	private Integer code;
+	private Map<String, Object> data = new HashMap<>();
+	
+	public class Builder {
+		
+		private ResultEntity re = new ResultEntity();
+		
+		public Builder success() {
+			this.re.success(true);
+			return this;
+		}
+		
+		public Builder failure() {
+			this.re.success(false);
+			return this;
+		}
+		
+		public Builder code(Integer code) {
+			this.re.code(code);
+			return this;
+		}
+		
+		public Builder message(String message) {
+			this.re.message(message);
+			return this;
+		}
+		
+		public Builder put(String key, Object value) {
+			this.re.put(key, value);
+			return this;
+		}
+		
+		public ResultEntity as() {
+			return this.re;
+		}
+		public Map<String, Object> asMap() {
+			return this.re.asMap();
+		}
+		public Map<String, Object> asMapWithout() {
+			return this.re.asMapWithout();
+		}
+		public String asJSON() throws JsonProcessingException {
+			return this.re.asJSON();
+		}
+		public String asJSONWithout() throws JsonProcessingException {
+			return this.re.asJSONWithout();
+		}
+	}
+	
+	public static Builder create() {
+		return new ResultEntity().new Builder();
+	}
+	public static Builder build() {
+		return create();
+	}
+
+	public Boolean success() {
+		return success;
+	}
+	public void success(Boolean success) {
+		this.success = success;
+	}
+	public String message() {
+		return message;
+	}
+	public void message(String message) {
+		this.message = message;
+	}
+	public Integer code() {
+		return code;
+	}
+	public void code(Integer code) {
+		this.code = code;
+	}
+	public void put(String key, Object value) {
+		this.data.put(key, value);
+	}
+	@SuppressWarnings("unchecked")
+	public <T> T get(String key) {
+		Object value = this.data.get(key);
+		if (value != null) {
+			return (T) value;
+		}
+		return null;
+	}
+	public Map<String, Object> asMap() {
+		Map<String, Object> map = new HashMap<>();
+		map.put("success", this.success);
+		map.put("message", this.message);
+		map.put("code", this.code);
+		map.put("data", this.data);
+		return map;
+	}
+	public Map<String, Object> asMapWithout() {
+		Map<String, Object> map = new HashMap<>();
+		map.put("success", this.success);
+		map.put("message", this.message);
+		map.put("code", this.code);
+		map.putAll(this.data);
+		return map;
+	}
+	public String asJSON() throws JsonProcessingException {
+		return new ObjectMapper().writeValueAsString(this.asMap());
+	}
+	public String asJSONWithout() throws JsonProcessingException {
+		return new ObjectMapper().writeValueAsString(this.asMapWithout());
+	}
+}
