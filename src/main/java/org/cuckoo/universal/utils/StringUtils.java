@@ -15,14 +15,14 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class StringUtils {
 	
-	private static final String aes_secret = "cuckoo20100401";
+	private static final String default_aes_secret = "cuckoo20100401";
 	
 	public static String encryptByAES(String str) {
-		return encryptByAES(str, aes_secret);
+		return encryptByAES(str, default_aes_secret);
 	}
 	
 	public static String decryptByAES(String ciphertext) {
-		return decryptByAES(ciphertext, aes_secret);
+		return decryptByAES(ciphertext, default_aes_secret);
 	}
 	
 	public static String encryptByAES(String str, String secret) {
@@ -96,7 +96,7 @@ public class StringUtils {
 	 * 生成唯一的数字字符串
 	 * @return
 	 */
-	public static String uniqueNumString(){
+	public static String uniqueNumString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(System.currentTimeMillis());
 		int r = 0;
@@ -112,7 +112,7 @@ public class StringUtils {
 	 * @param str
 	 * @return
 	 */
-	public static boolean isNullOrEmpty(String str){
+	public static boolean isNullOrEmpty(String str) {
 		return str == null || str.trim().length() == 0 ? true : false;
 	}
 	
@@ -137,6 +137,73 @@ public class StringUtils {
 			e.printStackTrace();
 		}
         return sb.toString();
+	}
+	
+	/**
+	 * 使首字母大写
+	 * @param str
+	 * @return
+	 */
+	public static String makeFirstCharToUpperCase(String str) {
+		String result = "";
+		String firstChar = String.valueOf(str.charAt(0)).toUpperCase();
+		result += firstChar + str.substring(1);
+		return result;
+	}
+	
+	/**
+	 * 使首字母小写
+	 * @param str
+	 * @return
+	 */
+	public static String makeFirstCharToLowerCase(String str) {
+		String result = "";
+		String firstChar = String.valueOf(str.charAt(0)).toLowerCase();
+		result += firstChar + str.substring(1);
+		return result;
+	}
+	
+	/**
+	 * 从短横线分隔命名到首字母大写命名
+	 * @param str
+	 * @return
+	 */
+	public static String fromKebabCaseToPascalCase(String str) {
+		
+		String result = "";
+		
+		if (str.indexOf("_") != -1) {
+			String[] strFragments = str.split("_");
+			for (int i = 0; i < strFragments.length; i++) {
+				result += makeFirstCharToUpperCase(strFragments[i]);
+			}
+		} else {
+			result = makeFirstCharToUpperCase(str);
+		}
+		return result;
+	}
+	
+	/**
+	 * 从首字母大写命名到短横线分隔命名
+	 * @param str
+	 * @return
+	 */
+	public static String fromPascalCaseToKebabCase(String str) {
+		
+		StringBuilder result = new StringBuilder();
+		
+		char[] chars = str.toCharArray();
+		for (int i = 0; i < chars.length; i++) {
+			if (i == 0) {
+				result.append(String.valueOf(chars[i]).toLowerCase());
+			} else if (Character.isUpperCase(chars[i])) {
+				result.append("_");
+				result.append(String.valueOf(chars[i]).toLowerCase());
+			} else {
+				result.append(String.valueOf(chars[i]));
+			}
+		}
+		return result.toString();
 	}
 	
 }
