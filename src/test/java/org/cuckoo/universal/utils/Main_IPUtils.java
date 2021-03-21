@@ -1,7 +1,5 @@
 package org.cuckoo.universal.utils;
 
-import org.cuckoo.universal.utils.IPUtils;
-
 public class Main_IPUtils {
 
 	public static void main(String[] args) {

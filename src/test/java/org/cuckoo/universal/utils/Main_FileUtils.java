@@ -2,7 +2,6 @@ package org.cuckoo.universal.utils;
 
 import java.io.IOException;
 
-import org.cuckoo.universal.utils.FileUtils;
 import org.cuckoo.universal.utils.FileUtils.ReadCallback;
 
 public class Main_FileUtils {
